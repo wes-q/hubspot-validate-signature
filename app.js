@@ -4,7 +4,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const crypto = require("crypto");
 const app = express();
-const PORT = 3000;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 console.log("CLIENTSEC", CLIENT_SECRET);
 
@@ -112,6 +111,5 @@ app.post("/webhook-test", (request, response) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
