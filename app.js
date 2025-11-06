@@ -5,7 +5,6 @@ const bodyParser = require("body-parser");
 const crypto = require("crypto");
 const app = express();
 const PORT = 3000;
-const CLIENT_SECRET = "secret";
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -33,7 +32,7 @@ app.post("/webhook-test", (request, response) => {
     const rawString = `${method}${uri}${JSON.stringify(body)}${timestampHeader}`;
 
     // Create HMAC SHA-256 hash from resulting string above, then base64-encode it
-    const hashedString = crypto.createHmac("sha256", CLIENT_SECRET).update(rawString).digest("base64");
+    const hashedString = crypto.createHmac("sha256", process.env.CLIENT_SECRET).update(rawString).digest("base64");
 
     // Validate signature: compare computed signature vs. signature in header
     if (crypto.timingSafeEqual(Buffer.from(hashedString), Buffer.from(signatureHeader))) {
