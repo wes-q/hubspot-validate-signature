@@ -10,49 +10,12 @@ console.log("CLIENTSEC", CLIENT_SECRET);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// app.post("/webhook-test", (request, response) => {
-//     response.status(200).send("Received webhook subscription trigger");
-
-//     const { url, method, body, headers, hostname } = request;
-
-//     // Parse headers needed to validate signature
-//     const signatureHeader = headers["x-hubspot-signature-v3"];
-//     console.log("SignatureHeader", signatureHeader)
-//     const timestampHeader = headers["x-hubspot-request-timestamp"];
-//     console.log("TimestampHeader", timestampHeader)
-
-//     // Validate timestamp
-//     const MAX_ALLOWED_TIMESTAMP = 300000; // 5 minutes in milliseconds
-//     const currentTime = Date.now();
-//     if (currentTime - timestampHeader > MAX_ALLOWED_TIMESTAMP) {
-//         console.log("Max allowed timestamp 5 minutes");
-//         // Add any rejection logic here
-//         return;
-//     } else {
-//         console.log("Timestamp is good");
-//     }
-
-//     // Concatenate request method, URI, body, and header timestamp
-//     const uri = `https://${hostname}${url}`;
-//     const rawString = `${method}${uri}${JSON.stringify(body)}${timestampHeader}`;
-//     console.log("RawString", rawString)
-
-//     // Create HMAC SHA-256 hash from resulting string above, then base64-encode it
-//     const hashedString = crypto.createHmac("sha256", CLIENT_SECRET).update(rawString).digest("base64");
-//     console.log("HashedString", hashedString)
-
-//     // Validate signature: compare computed signature vs. signature in header
-//     if (crypto.timingSafeEqual(Buffer.from(hashedString), Buffer.from(signatureHeader))) {
-//         console.log("Signature matches! Request is valid.");
-//         // Proceed with any request processing as needed.
-//     } else {
-//         console.log("Signature does not match: request is invalid");
-//         // Add any rejection logic here.
-//     }
-// });
-
 app.post("/webhook-test", (request, response) => {
     const { url, method, body, headers, hostname } = request;
+    console.log("URL", url);
+    console.log("Method", method);
+    console.log("Body", body);
+    console.log("Hostname", hostname);
 
     // Parse headers needed to validate signature
     const signatureHeader = headers["x-hubspot-signature-v3"];
@@ -81,7 +44,7 @@ app.post("/webhook-test", (request, response) => {
     console.log("🧾 RawString:", rawString);
 
     // Compute HMAC SHA-256 hash
-    const hashedString = crypto.createHmac("sha256", process.env.CLIENT_SECRET).update(rawString).digest("base64");
+    const hashedString = crypto.createHmac("sha256", CLIENT_SECRET).update(rawString).digest("base64");
     console.log("🔑 Computed Signature:", hashedString);
 
     // Validate signature
